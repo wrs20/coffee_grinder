@@ -11,7 +11,7 @@ burrset_hole_minor_radius = 2;
 burrset_hole_recess_radius = burrset_hole_minor_radius+2;
 burrset_hole_recess_offset = 2.5;
 
-render_burrs = 0;
+render_burrs = 1;
 
 module burr(z) {
     translate([0,0,z]) {
@@ -64,13 +64,49 @@ module burr(z) {
     }
 }
 
+module lower_holder () {
+    union() {
+        cylinder(
+            r1=burrset_rear_inner_radius, 
+            r2=burrset_rear_inner_radius, 
+            h=burrset_rear_inner_depth
+        );
+        plate_depth = 8;
+        cone_depth = 8;
+        translate([0,0,-plate_depth])
+            cylinder(
+                r1=burrset_outer_radius, 
+                r2=burrset_outer_radius, 
+                h=plate_depth
+            );
+        translate([0,0,burrset_rear_inner_depth])
+            cylinder(
+                r1=burrset_inner_radius, 
+                r2=5, 
+                h=cone_depth
+            );
+        translate([0,0,burrset_rear_inner_depth+cone_depth])
+            cylinder(
+                r1=5, 
+                r2=5, 
+                h=100
+            );
+        translate([0,0,-plate_depth-20])
+            cylinder(
+                r1=5, 
+                r2=5, 
+                h=20
+            );
+    }
+}
+
+
 // Bottom burr
-burr(0.0);
+#burr(0.0);
 
 // Top burr
-translate([0,0, 2 * burrset_height + burrset_separation]) rotate([180, 0, 0]) burr(0.0);
+#translate([0,0, 2 * burrset_height + burrset_separation]) rotate([180, 0, 0]) burr(0.0);
 
-
-
+lower_holder();
 
 
