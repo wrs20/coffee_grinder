@@ -64,6 +64,7 @@ module burr(z) {
     }
 }
 
+// A holder for the bottom burrset
 module lower_holder () {
     union() {
         cylinder(
@@ -100,13 +101,48 @@ module lower_holder () {
     }
 }
 
+// A holder for the top burrset
+module upper_holder () {
+    lower_plate_depth = 16;
+
+    difference() {
+         union() {
+            translate([0, 0, -burrset_rear_inner_depth])
+            cylinder(
+                r1=burrset_rear_inner_radius, 
+                r2=burrset_rear_inner_radius, 
+                h=burrset_rear_inner_depth
+            );
+            cylinder(
+                r1=burrset_outer_radius, 
+                r2=burrset_outer_radius, 
+                h=lower_plate_depth
+            );
+        }
+        union() {
+            translate([0,0,-burrset_rear_inner_depth-0.5])
+            cylinder(
+                r1=burrset_inner_radius, 
+                r2=burrset_inner_radius+10, 
+                h=burrset_rear_inner_depth+lower_plate_depth+1
+            );
+            cylinder(
+                r1=burrset_inner_radius-10, 
+                r2=burrset_outer_radius, 
+                h=lower_plate_depth+1
+            );
+        }
+    }
+}
+
 
 // Bottom burr
 #burr(0.0);
+lower_holder();
+
 
 // Top burr
 #translate([0,0, 2 * burrset_height + burrset_separation]) rotate([180, 0, 0]) burr(0.0);
-
-lower_holder();
+translate([0,0, 2 * burrset_height + burrset_separation]) upper_holder();
 
 
